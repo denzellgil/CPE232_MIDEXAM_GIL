@@ -1,0 +1,23 @@
+---
+
+
+- name: Installation of ELK stack (Elasticsearch, Logstash, Kibana) for Ubuntu
+  apt:
+    name:
+      - elasticsearch
+      - logstash
+      - kibana
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Installation of ELK stack (Elasticsearch, Logstash, Kibana) for CentOS
+  yum:
+    name:
+      - elasticsearch-oss
+      - logstash
+      - kibana-oss
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+

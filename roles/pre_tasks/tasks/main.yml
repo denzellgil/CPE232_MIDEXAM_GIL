@@ -1,0 +1,77 @@
+---
+- name: Install ELK Pre-Requisites for Ubuntu
+  apt:
+    name:
+      - openjdk-11-jdk
+      - wget
+      - apt-transport-https
+      - curl
+      - gnupg2
+      - snapd
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Nagios Packages for Ubuntu
+  apt:
+    name:
+      - autoconf
+      - gcc
+      - libc6
+      - make
+      - wget
+      - unzip
+      - apache2
+      - php
+      - libapache2-mod-php
+      - libgd-dev
+      - mariadb-server
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Prometheus Pre-req for Ubuntu
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Nagios Packages for CentOS
+  yum:
+    name:
+      - gcc
+      - glibc
+      - glibc-common
+      - perl
+      - httpd
+      - php
+      - wget
+      - gd
+      - gd-devel
+      - mariadb-server
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Install ELK Pre-Requisites for CentOS
+  yum:
+    name:
+      - java-openjdk
+      - snapd
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Install Prometheus Pre-Requisites for CentOS
+  yum:
+    name:
+      - epel-release
+      - nginx
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Enable Sockets for CentOS
+  command: systemctl enable --now snapd.socket
+  when: ansible_distribution == "CentOS"

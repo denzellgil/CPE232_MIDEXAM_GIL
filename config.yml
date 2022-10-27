@@ -1,0 +1,92 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Update repository index for Ubuntu
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update repository index for CentOS
+    tags: always
+    yum:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+- hosts: ubuntu
+  become: true
+  tasks:
+    - name: Install Pre-requisites
+      include_role:
+        name: pre_tasks
+
+- hosts: centos
+  become: true
+  tasks:
+    - name: Install Pre-requisites
+      include_role:
+        name: pre_tasks
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Install Nagios for Ubuntu servers
+      include_role:
+        name: nagios_ubuntu
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Nagios for CentOS Servers
+      include_role:
+        name: nagios_centos
+      when: ansible_distribution == "CentOS"
+
+    - name: Install Prometheus for Ubuntu servers
+      include_role:
+        name: prometheus_ubuntu
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Prometheus for CentOS servers
+      include_role:
+        name: prometheus_centos
+      when: ansible_distribution == "CentOS"
+
+- hosts: ubuntu
+  become: true
+  tasks:
+    - name: Install ELK stack on Ubuntu server
+      include_role:
+        name: elk
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Grafana on Ubuntu server
+      include_role:
+        name: grafana
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install InfluxDB for Ubuntu server
+      include_role:
+        name: influxdb
+      when: ansible_distribution == "Ubuntu"
+
+- hosts: centos
+  become: true
+  tasks:
+    - name: Install ELK stack on CentOS server
+      include_role:
+        name: elk
+      when: ansible_distribution == "CentOS"
+
+    - name: Install Grafana on CentOS Server
+      include_role:
+        name: grafana
+      when: ansible_distribution == "CentOS"
+
+    - name: Install InfluxDB on CentOS Server
+      include_role:
+        name: influxdb
+      when: ansible_distribution == "CentOS"
